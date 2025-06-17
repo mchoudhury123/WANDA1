@@ -3,6 +3,7 @@ import HRPortalLayout from '../../components/hr-portal/layout/HRPortalLayout';
 import PayrollCalculator from '../../components/hr-portal/payroll/PayrollCalculator';
 import PayslipGenerator from '../../components/hr-portal/payroll/PayslipGenerator';
 import { Employee, Payroll } from '../../types/hr-portal';
+import '../../styles/sui-overflow.css';
 
 const PayrollPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'current' | 'history'>('current');
@@ -112,414 +113,322 @@ const PayrollPage: React.FC = () => {
 
   return (
     <HRPortalLayout activeTab="payroll">
-      <div className="py-6 px-6">
-        <h1 className="text-3xl font-bold mb-2 text-gray-900">Payroll Management</h1>
-        <p className="text-gray-600 mb-8">Calculate and process employee payroll, including salaries, commissions, and deductions</p>
-
-        {/* Tabs */}
-        <div className="mb-6">
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
-              <button
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === 'current'
-                    ? 'border-primary text-primary'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-                onClick={() => setActiveTab('current')}
-              >
-                Current Pay Period
-              </button>
-              <button
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === 'history'
-                    ? 'border-primary text-primary'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-                onClick={() => {
-                  setActiveTab('history');
-                  setSelectedPayroll(null);
-                  setSelectedPayrollId(null);
-                }}
-              >
-                Payroll History
-              </button>
-            </nav>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50">
+        {/* Colorful Header */}
+        <div className="sui-header green">
+          <div className="container mx-auto px-6">
+            <div className="sui-animate-in">
+              <h1>💰 Payroll Management</h1>
+              <p>Calculate and process employee payroll with ease</p>
+            </div>
           </div>
         </div>
 
-        {/* Current Pay Period Tab */}
-        {activeTab === 'current' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <PayrollCalculator 
-              employees={employees} 
-              payrollPeriod={currentPayPeriod}
-              onCalculate={handleCalculatePayroll}
-            />
-            
-            {selectedPayroll ? (
-              <PayslipGenerator 
-                payroll={selectedPayroll}
-                employee={selectedEmployee}
-                onProcess={handleProcessPayroll}
-              />
-            ) : (
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col items-center justify-center h-full">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <h3 className="text-lg font-medium text-gray-600">No Payslip Generated Yet</h3>
-                <p className="text-gray-500 mt-1 text-center">Select an employee and calculate their payroll to generate a payslip.</p>
-              </div>
-            )}
+        <div className="container mx-auto px-6 pb-12">
+          {/* Tabs */}
+          <div className="sui-tabs">
+            <button
+              className={`sui-tab ${activeTab === 'current' ? 'active' : ''}`}
+              onClick={() => setActiveTab('current')}
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Current Pay Period
+            </button>
+            <button
+              className={`sui-tab ${activeTab === 'history' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('history');
+                setSelectedPayroll(null);
+                setSelectedPayrollId(null);
+              }}
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Payroll History
+            </button>
           </div>
-        )}
 
-        {/* Payroll History Tab */}
-        {activeTab === 'history' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Top Summary Cards */}
-            <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6 mb-2">
-              {/* Total Processed */}
-              <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-sm font-medium text-gray-500">Processed Payrolls</h3>
-                  <span className="bg-green-100 text-green-600 p-2 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </span>
-                </div>
-                <div className="flex items-baseline">
-                  <span className="text-3xl font-bold text-gray-900">
-                    {payrolls.filter(p => p.status === 'processed').length}
-                  </span>
-                </div>
-                <div className="mt-2 text-sm text-gray-600">
-                  Last processed: {payrolls.filter(p => p.status === 'processed').length > 0 
-                    ? new Date(payrolls.filter(p => p.status === 'processed')[0].createdAt).toLocaleDateString() 
-                    : 'None'}
-                </div>
+          {/* Current Pay Period Tab */}
+          {activeTab === 'current' && (
+            <div className="sui-grid sui-grid-2">
+              <div className="sui-card green sui-animate-in">
+                <PayrollCalculator 
+                  employees={employees} 
+                  payrollPeriod={currentPayPeriod}
+                  onCalculate={handleCalculatePayroll}
+                />
               </div>
               
-              {/* Total Gross */}
-              <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-sm font-medium text-gray-500">Total Gross (Current Month)</h3>
-                  <span className="bg-blue-100 text-blue-600 p-2 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              {selectedPayroll ? (
+                <div className="sui-card orange sui-animate-in" style={{ animationDelay: '0.2s' }}>
+                  <PayslipGenerator 
+                    payroll={selectedPayroll}
+                    employee={selectedEmployee}
+                    onProcess={handleProcessPayroll}
+                  />
+                </div>
+              ) : (
+                <div className="sui-card sui-animate-in" style={{ animationDelay: '0.2s' }}>
+                  <div className="flex flex-col items-center justify-center h-full py-16">
+                    <div className="sui-icon-3d mb-6">
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-700 mb-2">No Payslip Generated Yet</h3>
+                    <p className="text-gray-500 text-center max-w-sm">Select an employee and calculate their payroll to generate a professional payslip.</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Payroll History Tab */}
+          {activeTab === 'history' && (
+            <div className="space-y-8">
+              {/* Top Summary Cards */}
+              <div className="sui-grid sui-grid-3">
+                {/* Total Processed */}
+                <div className="sui-stat-card sui-animate-in">
+                  <div className="sui-stat-icon green">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div className="sui-stat-value">
+                    {payrolls.filter(p => p.status === 'processed').length}
+                  </div>
+                  <div className="sui-stat-label">Processed Payrolls</div>
+                  <div className="mt-2 text-xs text-gray-500">
+                    Last: {payrolls.filter(p => p.status === 'processed').length > 0 
+                      ? new Date(payrolls.filter(p => p.status === 'processed')[0].createdAt).toLocaleDateString() 
+                      : 'None'}
+                  </div>
+                </div>
+                
+                {/* Total Gross */}
+                <div className="sui-stat-card sui-animate-in" style={{ animationDelay: '0.1s' }}>
+                  <div className="sui-stat-icon orange">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                  </span>
-                </div>
-                <div className="flex items-baseline">
-                  <span className="text-3xl font-bold text-gray-900">
+                  </div>
+                  <div className="sui-stat-value">
                     {new Intl.NumberFormat('en-US', {
                       style: 'currency',
                       currency: 'USD',
                       maximumFractionDigits: 0
                     }).format(payrolls.filter(p => p.status === 'processed').reduce((sum, p) => sum + p.totalGross, 0))}
-                  </span>
+                  </div>
+                  <div className="sui-stat-label">Total Gross</div>
+                  <div className="mt-2 text-xs text-gray-500">
+                    Across {payrolls.filter(p => p.status === 'processed').length} payrolls
+                  </div>
                 </div>
-                <div className="mt-2 text-sm text-gray-600">
-                  Across {payrolls.filter(p => p.status === 'processed').length} payrolls
-                </div>
-              </div>
-              
-              {/* Total Net */}
-              <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-sm font-medium text-gray-500">Total Net (Current Month)</h3>
-                  <span className="bg-primary/10 text-primary p-2 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                
+                {/* Total Net */}
+                <div className="sui-stat-card sui-animate-in" style={{ animationDelay: '0.2s' }}>
+                  <div className="sui-stat-icon pink">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z" />
                     </svg>
-                  </span>
-                </div>
-                <div className="flex items-baseline">
-                  <span className="text-3xl font-bold text-gray-900">
+                  </div>
+                  <div className="sui-stat-value">
                     {new Intl.NumberFormat('en-US', {
                       style: 'currency',
                       currency: 'USD',
                       maximumFractionDigits: 0
                     }).format(payrolls.filter(p => p.status === 'processed').reduce((sum, p) => sum + p.totalNet, 0))}
-                  </span>
-                </div>
-                <div className="mt-2 text-sm text-gray-600">
-                  After taxes and deductions
+                  </div>
+                  <div className="sui-stat-label">Total Net</div>
+                  <div className="mt-2 text-xs text-gray-500">
+                    After taxes and deductions
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Payroll History List */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-              <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
-                <h2 className="text-lg font-semibold text-gray-900">Payroll History</h2>
+              {/* Payroll History Grid */}
+              <div className="sui-grid sui-grid-3">
+                {/* Payroll History List */}
+                <div className="sui-card sui-animate-in" style={{ animationDelay: '0.3s' }}>
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="sui-icon-3d">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                    </span>
+                    <h2 className="text-xl font-bold text-gray-900">Payroll History</h2>
+                  </div>
+                  
+                  {isLoading ? (
+                    <div className="flex justify-center py-8">
+                      <div className="sui-loading">
+                        <div></div>
+                        <div></div>
+                      </div>
+                    </div>
+                  ) : payrolls.length > 0 ? (
+                    <div className="space-y-3 max-h-96 overflow-y-auto">
+                      {payrolls.map((payroll) => {
+                        const employee = employees.find(e => e.id === payroll.employeeId);
+                        const isSelected = selectedPayrollId === payroll.id;
+                        
+                        return (
+                          <div 
+                            key={payroll.id}
+                            className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                              isSelected 
+                                ? 'border-purple-300 bg-purple-50 shadow-md' 
+                                : 'border-gray-200 hover:border-purple-200 hover:bg-purple-25'
+                            }`}
+                            onClick={() => handlePayrollHistoryClick(payroll.id)}
+                          >
+                            <div className="flex justify-between items-start mb-2">
+                              <span className="font-semibold text-gray-900">
+                                {employee ? `${employee.firstName} ${employee.lastName}` : 'Unknown Employee'}
+                              </span>
+                              <span 
+                                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${
+                                  payroll.status === 'processed' 
+                                    ? 'bg-green-100 text-green-700'
+                                    : payroll.status === 'draft' 
+                                    ? 'bg-yellow-100 text-yellow-700'
+                                    : 'bg-red-100 text-red-700'
+                                }`}
+                              >
+                                {payroll.status.charAt(0).toUpperCase() + payroll.status.slice(1)}
+                              </span>
+                            </div>
+                            <div className="text-sm text-gray-600 mb-2">
+                              📅 {new Date(payroll.periodStart).toLocaleDateString()} - {new Date(payroll.periodEnd).toLocaleDateString()}
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs text-gray-500">
+                                {new Date(payroll.createdAt).toLocaleDateString()}
+                              </span>
+                              <span className="text-sm font-bold text-green-600">
+                                {new Intl.NumberFormat('en-US', {
+                                  style: 'currency',
+                                  currency: 'USD'
+                                }).format(payroll.totalNet)}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <div className="sui-icon-3d mb-4 mx-auto">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                      <p>No payroll history available</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Selected Payroll Details */}
+                {selectedPayroll ? (
+                  <div className="lg:col-span-2">
+                    <div className="sui-card pink sui-animate-in" style={{ animationDelay: '0.4s' }}>
+                      <PayslipGenerator 
+                        payroll={selectedPayroll}
+                        employee={selectedEmployee}
+                        onProcess={handleProcessPayroll}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="lg:col-span-2">
+                    <div className="sui-card sui-animate-in" style={{ animationDelay: '0.4s' }}>
+                      <div className="flex flex-col items-center justify-center h-full py-16">
+                        <div className="sui-icon-3d mb-6">
+                          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-700 mb-2">Select a Payroll</h3>
+                        <p className="text-gray-500 text-center max-w-sm">Choose a payroll from the history list to view detailed information and payslip.</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
-              
-              {isLoading ? (
-                <div className="p-6 flex justify-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-                </div>
-              ) : payrolls.length > 0 ? (
-                <div className="overflow-y-auto max-h-[600px]">
-                  <ul className="divide-y divide-gray-200">
-                    {payrolls.map((payroll) => {
-                      const employee = employees.find(e => e.id === payroll.employeeId);
-                      const isSelected = selectedPayrollId === payroll.id;
-                      
-                      return (
-                        <li 
-                          key={payroll.id}
-                          className={`p-4 hover:bg-gray-50 cursor-pointer ${isSelected ? 'bg-primary/5 border-l-4 border-primary' : ''}`}
-                          onClick={() => handlePayrollHistoryClick(payroll.id)}
-                        >
-                          <div className="flex justify-between mb-1">
-                            <span className="font-medium text-gray-900">
-                              {employee ? `${employee.firstName} ${employee.lastName}` : 'Unknown Employee'}
-                            </span>
-                            <span 
-                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                payroll.status === 'processed' 
-                                  ? 'bg-green-100 text-green-800'
-                                  : payroll.status === 'draft' 
-                                  ? 'bg-yellow-100 text-yellow-800'
-                                  : 'bg-red-100 text-red-800'
-                              }`}
-                            >
-                              {payroll.status.charAt(0).toUpperCase() + payroll.status.slice(1)}
-                            </span>
-                          </div>
-                          <div className="text-sm text-gray-600">
-                            {new Date(payroll.periodStart).toLocaleDateString()} - {new Date(payroll.periodEnd).toLocaleDateString()}
-                          </div>
-                          <div className="mt-2 flex justify-between">
-                            <span className="text-sm text-gray-500">
-                              {new Date(payroll.createdAt).toLocaleDateString()}
-                            </span>
-                            <span className="text-sm font-medium">
-                              {new Intl.NumberFormat('en-US', {
-                                style: 'currency',
-                                currency: 'USD'
-                              }).format(payroll.totalNet)}
-                            </span>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              ) : (
-                <div className="p-6 text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  <h3 className="text-lg font-medium text-gray-600">No Payroll History</h3>
-                  <p className="text-gray-500 mt-1">No payroll records have been created yet.</p>
-                </div>
-              )}
             </div>
-            
-            {/* Selected Payroll Payslip */}
-            <div className="lg:col-span-2">
-              {selectedPayroll ? (
-                <PayslipGenerator 
-                  payroll={selectedPayroll}
-                  employee={selectedEmployee}
-                  onProcess={handleProcessPayroll}
-                />
-              ) : (
-                <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col items-center justify-center h-full">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  <h3 className="text-lg font-medium text-gray-600">No Payslip Selected</h3>
-                  <p className="text-gray-500 mt-1 text-center">Select a payroll record from the history list to view its details.</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </HRPortalLayout>
   );
 };
 
-export default PayrollPage;
-
-// Sample data for demo purposes
+// Sample data for development/demo purposes
 const sampleEmployees: Partial<Employee>[] = [
   {
-    id: '101',
-    firstName: 'Sophie',
-    lastName: 'Taylor',
-    email: 'sophie.taylor@example.com',
-    role: 'Senior Stylist',
-    department: 'Hair',
-    status: 'active'
-  },
-  {
-    id: '102',
-    firstName: 'Alex',
-    lastName: 'Rodriguez',
-    email: 'alex.rodriguez@example.com',
-    role: 'Salon Manager',
-    department: 'Management',
-    status: 'active'
-  },
-  {
-    id: '103',
-    firstName: 'Emma',
+    id: '1',
+    firstName: 'Sarah',
     lastName: 'Johnson',
-    email: 'emma.johnson@example.com',
-    role: 'Junior Stylist',
-    department: 'Hair',
-    status: 'active'
+    position: 'Senior Stylist',
+    baseSalary: 3500,
+    commissionRate: 0.15
   },
   {
-    id: '104',
-    firstName: 'David',
-    lastName: 'Miller',
-    email: 'david.miller@example.com',
-    role: 'Barber',
-    department: 'Hair',
-    status: 'active'
-  },
-  {
-    id: '105',
-    firstName: 'Amanda',
+    id: '2',
+    firstName: 'Mike',
     lastName: 'Chen',
-    email: 'amanda.chen@example.com',
-    role: 'Esthetician',
-    department: 'Skin Care',
-    status: 'on_leave'
+    position: 'Barber',
+    baseSalary: 3200,
+    commissionRate: 0.12
+  },
+  {
+    id: '3',
+    firstName: 'Emma',
+    lastName: 'Davis',
+    position: 'Nail Technician',
+    baseSalary: 2800,
+    commissionRate: 0.20
   }
 ];
 
 const samplePayrolls: Payroll[] = [
   {
     id: '1',
-    employeeId: '101',
+    employeeId: '1',
     periodStart: '2024-06-16',
     periodEnd: '2024-06-30',
-    baseSalary: 1800,
-    commissions: 952.50,
-    tips: 427.50,
-    deductions: {
-      health: 85.75,
-      retirement: 72.00,
-      other: 0
-    },
-    taxes: {
-      federal: 270.00,
-      state: 90.00,
-      socialSecurity: 170.64,
-      medicare: 39.91
-    },
-    totalGross: 3180.00,
-    totalNet: 2521.70,
+    baseSalary: 3500,
+    commissions: 875,
+    tips: 240,
+    deductions: 350,
+    taxes: 920,
+    totalGross: 4615,
+    totalNet: 3345,
     status: 'processed',
-    createdAt: '2024-06-30T15:30:00Z',
-    processedAt: '2024-06-30T16:45:00Z'
+    createdAt: '2024-07-01T10:00:00Z',
+    processedAt: '2024-07-01T14:30:00Z'
   },
   {
     id: '2',
-    employeeId: '103',
+    employeeId: '2',
     periodStart: '2024-06-16',
     periodEnd: '2024-06-30',
-    baseSalary: 1200,
-    commissions: 368.75,
-    tips: 195.25,
-    deductions: {
-      health: 85.75,
-      retirement: 48.00,
-      other: 0
-    },
-    taxes: {
-      federal: 180.00,
-      state: 60.00,
-      socialSecurity: 97.05,
-      medicare: 22.70
-    },
-    totalGross: 1764.00,
-    totalNet: 1270.50,
+    baseSalary: 3200,
+    commissions: 480,
+    tips: 180,
+    deductions: 320,
+    taxes: 730,
+    totalGross: 3860,
+    totalNet: 2810,
     status: 'processed',
-    createdAt: '2024-06-30T14:22:00Z',
-    processedAt: '2024-06-30T16:45:00Z'
-  },
-  {
-    id: '3',
-    employeeId: '104',
-    periodStart: '2024-06-16',
-    periodEnd: '2024-06-30',
-    baseSalary: 1500,
-    commissions: 556.25,
-    tips: 325.50,
-    deductions: {
-      health: 85.75,
-      retirement: 60.00,
-      other: 0
-    },
-    taxes: {
-      federal: 225.00,
-      state: 75.00,
-      socialSecurity: 127.48,
-      medicare: 29.82
-    },
-    totalGross: 2381.75,
-    totalNet: 1778.70,
-    status: 'processed',
-    createdAt: '2024-06-30T12:15:00Z',
-    processedAt: '2024-06-30T16:45:00Z'
-  },
-  {
-    id: '4',
-    employeeId: '102',
-    periodStart: '2024-06-16',
-    periodEnd: '2024-06-30',
-    baseSalary: 2500,
-    commissions: 0,
-    tips: 0,
-    deductions: {
-      health: 85.75,
-      retirement: 100.00,
-      other: 0
-    },
-    taxes: {
-      federal: 375.00,
-      state: 125.00,
-      socialSecurity: 155.00,
-      medicare: 36.25
-    },
-    totalGross: 2500.00,
-    totalNet: 1623.00,
-    status: 'processed',
-    createdAt: '2024-06-30T11:05:00Z',
-    processedAt: '2024-06-30T16:45:00Z'
-  },
-  {
-    id: '5',
-    employeeId: '101',
-    periodStart: '2024-06-01',
-    periodEnd: '2024-06-15',
-    baseSalary: 1800,
-    commissions: 875.25,
-    tips: 412.50,
-    deductions: {
-      health: 85.75,
-      retirement: 72.00,
-      other: 0
-    },
-    taxes: {
-      federal: 270.00,
-      state: 90.00,
-      socialSecurity: 166.06,
-      medicare: 38.84
-    },
-    totalGross: 3087.75,
-    totalNet: 2365.10,
-    status: 'processed',
-    createdAt: '2024-06-15T15:45:00Z',
-    processedAt: '2024-06-15T17:15:00Z'
+    createdAt: '2024-07-01T10:15:00Z',
+    processedAt: '2024-07-01T14:45:00Z'
   }
-]; 
+];
+
+export default PayrollPage; 

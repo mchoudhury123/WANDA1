@@ -15,6 +15,9 @@ import ProductSales from './ProductSales';
 import FilterBar from './common/FilterBar';
 import LoadingSpinner from '../common/LoadingSpinner';
 
+// Import our custom styles
+import '../../styles/sui-overflow.css';
+
 const AnalyticsDashboard: React.FC = () => {
   // State for global filters
   const [dateRange, setDateRange] = useState<{start: Date, end: Date}>({
@@ -149,76 +152,145 @@ const AnalyticsDashboard: React.FC = () => {
     setDateRange({ start, end });
   };
 
+  // Calculate quick stats
+  const totalAppointments = analyticsData.appointments.length;
+  const totalRevenue = analyticsData.appointments.reduce((sum: number, apt: any) => sum + (apt.total || 0), 0);
+  const activeStaff = analyticsData.staff.filter((s: any) => s.status === 'active').length;
+  const totalClients = analyticsData.clients.length;
+
   return (
-    <div className="analytics-dashboard">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Analytics Dashboard</h1>
-        <p className="text-sm text-gray-500">
-          Comprehensive business analytics and performance metrics
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50">
+      {/* Colorful Header with 3D Effect */}
+      <div className="sui-header">
+        <div className="container mx-auto px-6">
+          <div className="sui-animate-in">
+            <h1>📊 Analytics Dashboard</h1>
+            <p>Comprehensive business insights with powerful analytics</p>
+          </div>
+        </div>
       </div>
 
-      {/* Filter Bar */}
-      <FilterBar 
-        dateRange={dateRange}
-        setDateRange={setDateRange}
-        businessLocation={businessLocation}
-        setBusinessLocation={setBusinessLocation}
-        setLastWeek={setLastWeek}
-        setLastMonth={setLastMonth}
-        setCurrentWeek={setCurrentWeek}
-        setCurrentMonth={setCurrentMonth}
-      />
+      <div className="container mx-auto px-6 pb-12">
+        {/* Filter Bar */}
+        <FilterBar 
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+          businessLocation={businessLocation}
+          setBusinessLocation={setBusinessLocation}
+          setLastWeek={setLastWeek}
+          setLastMonth={setLastMonth}
+          setCurrentWeek={setCurrentWeek}
+          setCurrentMonth={setCurrentMonth}
+        />
 
-      {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <LoadingSpinner />
+        {/* Quick Stats Grid */}
+        <div className="sui-grid sui-grid-4 mb-8">
+          <div className="sui-stat-card sui-animate-in">
+            <div className="sui-stat-icon purple">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div className="sui-stat-value">{totalAppointments}</div>
+            <div className="sui-stat-label">Total Appointments</div>
+          </div>
+
+          <div className="sui-stat-card sui-animate-in" style={{ animationDelay: '0.1s' }}>
+            <div className="sui-stat-icon green">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="sui-stat-value">${totalRevenue.toLocaleString()}</div>
+            <div className="sui-stat-label">Total Revenue</div>
+          </div>
+
+          <div className="sui-stat-card sui-animate-in" style={{ animationDelay: '0.2s' }}>
+            <div className="sui-stat-icon orange">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <div className="sui-stat-value">{activeStaff}</div>
+            <div className="sui-stat-label">Active Staff</div>
+          </div>
+
+          <div className="sui-stat-card sui-animate-in" style={{ animationDelay: '0.3s' }}>
+            <div className="sui-stat-icon pink">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <div className="sui-stat-value">{totalClients}</div>
+            <div className="sui-stat-label">Total Clients</div>
+          </div>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          {/* Revenue & Booking Trends */}
-          <RevenueTrends 
-            appointments={analyticsData.appointments} 
-            services={analyticsData.services} 
-            dateRange={dateRange}
-          />
 
-          {/* Staff Performance & Utilization */}
-          <StaffPerformance 
-            appointments={analyticsData.appointments}
-            staff={analyticsData.staff}
-            dateRange={dateRange}
-          />
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="sui-loading">
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+        ) : (
+          <div className="sui-grid sui-grid-2">
+            {/* Revenue & Booking Trends */}
+            <div className="sui-card purple sui-animate-in" style={{ animationDelay: '0.4s' }}>
+              <RevenueTrends 
+                appointments={analyticsData.appointments} 
+                services={analyticsData.services} 
+                dateRange={dateRange}
+              />
+            </div>
 
-          {/* Client Behavior Analytics */}
-          <ClientAnalytics 
-            clients={analyticsData.clients}
-            appointments={analyticsData.appointments}
-            dateRange={dateRange}
-          />
+            {/* Staff Performance & Utilization */}
+            <div className="sui-card green sui-animate-in" style={{ animationDelay: '0.5s' }}>
+              <StaffPerformance 
+                appointments={analyticsData.appointments}
+                staff={analyticsData.staff}
+                dateRange={dateRange}
+              />
+            </div>
 
-          {/* Marketing & Upsell Insights */}
-          <MarketingInsights 
-            promotions={analyticsData.promotions}
-            appointments={analyticsData.appointments}
-            dateRange={dateRange}
-          />
+            {/* Client Behavior Analytics */}
+            <div className="sui-card orange sui-animate-in" style={{ animationDelay: '0.6s' }}>
+              <ClientAnalytics 
+                clients={analyticsData.clients}
+                appointments={analyticsData.appointments}
+                dateRange={dateRange}
+              />
+            </div>
 
-          {/* Google Calendar Utilization */}
-          <CalendarUtilization 
-            staff={analyticsData.staff}
-            appointments={analyticsData.appointments}
-            dateRange={dateRange}
-          />
+            {/* Marketing & Upsell Insights */}
+            <div className="sui-card pink sui-animate-in" style={{ animationDelay: '0.7s' }}>
+              <MarketingInsights 
+                promotions={analyticsData.promotions}
+                appointments={analyticsData.appointments}
+                dateRange={dateRange}
+              />
+            </div>
 
-          {/* Product Sales */}
-          <ProductSales 
-            products={analyticsData.products}
-            staff={analyticsData.staff}
-            dateRange={dateRange}
-          />
-        </div>
-      )}
+            {/* Calendar Utilization */}
+            <div className="sui-card purple sui-animate-in" style={{ animationDelay: '0.8s' }}>
+              <CalendarUtilization 
+                appointments={analyticsData.appointments}
+                staff={analyticsData.staff}
+                dateRange={dateRange}
+              />
+            </div>
+
+            {/* Product Sales */}
+            <div className="sui-card green sui-animate-in" style={{ animationDelay: '0.9s' }}>
+              <ProductSales 
+                products={analyticsData.products}
+                appointments={analyticsData.appointments}
+                dateRange={dateRange}
+              />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

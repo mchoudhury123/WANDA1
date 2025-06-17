@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "hosting": "nail-salon-crm"
+  },
+  "targets": {
+    "nail-salon-crm": {
+      "hosting": {
+        "nadia-beauty-salon": [
+          "nadia-beauty-salon"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

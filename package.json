@@ -8,15 +8,24 @@
     "@slack/web-api": "^7.5.0",
     "@types/luxon": "^3.6.2",
     "@types/react-datepicker": "^6.2.0",
+    "@types/yargs": "^17.0.32",
     "axios": "^1.7.0",
     "date-fns": "^4.1.0",
     "firebase": "^11.8.1",
+    "firebase-admin": "^12.0.0",
     "gapi-script": "^1.2.0",
     "google-auth-library": "^10.0.0-rc.3",
     "googleapis": "^150.0.1",
     "luxon": "^3.6.1",
     "react-datepicker": "^8.4.0",
     "recharts": "^2.15.3",
-    "socket.io-client": "^4.8.0"
+    "socket.io-client": "^4.8.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "workbox-window": "^7.0.0",
+    "yargs": "^17.7.2"
+  },
+  "scripts": {
+    "onboard-tenant": "ts-node scripts/onboardTenant.ts"
   }
 }

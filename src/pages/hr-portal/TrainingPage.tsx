@@ -287,15 +287,11 @@ const TrainingPage: React.FC = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 h-8 w-8">
-                              {employee?.avatar ? (
-                                <img className="h-8 w-8 rounded-full" src={employee.avatar} alt="" />
-                              ) : (
-                                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                                  <span className="text-primary font-medium text-xs">
-                                    {employee?.firstName?.[0]}{employee?.lastName?.[0]}
-                                  </span>
-                                </div>
-                              )}
+                              <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                <span className="text-primary font-medium text-xs">
+                                  {employee?.firstName?.[0]}{employee?.lastName?.[0]}
+                                </span>
+                              </div>
                             </div>
                             <div className="ml-3">
                               <div className="text-sm font-medium text-gray-900">

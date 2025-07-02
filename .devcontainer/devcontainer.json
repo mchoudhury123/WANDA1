@@ -1,0 +1,78 @@
+{
+  "name": "CRM Development Container",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "forwardPorts": [
+    5173,
+    9000,
+    9001,
+    9002,
+    9003,
+    9004,
+    9005,
+    9006,
+    9007,
+    9008,
+    9009,
+    9010
+  ],
+  "portsAttributes": {
+    "5173": {
+      "label": "Vite Dev Server",
+      "onAutoForward": "notify"
+    },
+    "9000": {
+      "label": "Firebase Auth Emulator",
+      "onAutoForward": "silent"
+    },
+    "9001": {
+      "label": "Firebase Functions Emulator",
+      "onAutoForward": "silent"
+    },
+    "9002": {
+      "label": "Firebase Firestore Emulator", 
+      "onAutoForward": "silent"
+    },
+    "9003": {
+      "label": "Firebase Database Emulator",
+      "onAutoForward": "silent"
+    },
+    "9004": {
+      "label": "Firebase Hosting Emulator",
+      "onAutoForward": "silent"
+    },
+    "9005": {
+      "label": "Firebase Pub/Sub Emulator",
+      "onAutoForward": "silent"
+    },
+    "9006": {
+      "label": "Firebase Storage Emulator",
+      "onAutoForward": "silent"
+    },
+    "9009": {
+      "label": "Firebase Emulator UI",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "npm ci",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bradlc.vscode-tailwindcss",
+        "ms-vscode.vscode-typescript-next",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-json",
+        "formulahendry.auto-rename-tag",
+        "christian-kohler.path-intellisense",
+        "ms-vscode.vscode-eslint"
+      ],
+      "settings": {
+        "typescript.preferences.includePackageJsonAutoImports": "on",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      }
+    }
+  },
+  "remoteUser": "node"
+} 

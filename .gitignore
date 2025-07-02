@@ -4,16 +4,15 @@
 node_modules/
 /.pnp
 .pnp.js
-salon-crm/node_modules/
-src/node_modules/
+**/node_modules/
 
 # Testing
 /coverage
-salon-crm/coverage/
+**/coverage/
 
 # Production builds
 /build
-salon-crm/build/
+**/build/
 dist/
 
 # Environment variables (IMPORTANT: Never commit these!)
@@ -22,11 +21,11 @@ dist/
 .env.development.local
 .env.test.local
 .env.production.local
-salon-crm/.env
-salon-crm/.env.local
-salon-crm/.env.development.local
-salon-crm/.env.test.local
-salon-crm/.env.production.local
+**/.env
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
 
 # Firebase
 .firebase/
@@ -111,8 +110,7 @@ Thumbs.db
 *.backup
 
 # Package-lock files (can be regenerated)
-package-lock.json
-salon-crm/package-lock.json
+**/package-lock.json
 
 # TypeScript cache
 *.tsbuildinfo 
